@@ -113,7 +113,7 @@ class Point:
         root.bind('<KeyRelease-Shift_R>', cls.shift_up)
 
 
-def bezier_curve(num_steps, *points):
+def bezier_curve(num_steps, points):
     def cubic_bezier(p, t):
         a = (1.0 - t)**3
         b = 3.0 * t * (1.0 - t)**2
@@ -143,8 +143,9 @@ def update_bg():
     for i, point in enumerate(Point.points):
         if len(point.curve_points) != 0:
             after = Point.points[(i+1) % len(point.points)].pos
-            print(bezier_curve(100, point.pos, *point.curve_points, after))
-            points.extend(bezier_curve(100, point.pos, *point.curve_points, after)[:-2])
+            print([point.pos, *[point.pos for point in point.curve_points], after])
+            print(bezier_curve(100, [point.pos, *[point.pos for point in point.curve_points], after]))
+            points.extend(bezier_curve(100, [point.pos, *[point.pos for point in point.curve_points], after])[:-2])
         else:
             points.append(point.pos)
     ImageDraw.Draw(mask).polygon(points, fill='black', outline=None)
